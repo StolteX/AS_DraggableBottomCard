@@ -52,6 +52,8 @@ V1.12
 V1.13
 	-Add get and set HeaderPanel
 	-Add get and set BodyPanel
+V1.14
+	-B4J BugFix
 #End If
 
 #Event: Opened
@@ -223,6 +225,7 @@ Private Sub ShowIntern(ignore_event As Boolean,fromtouch As Boolean)
 		If fromtouch = False Then Sleep(g_show_duration)
 		'VisibleBodyHeightChanged
 	End If
+	old_top = xpnl_CardBase.Top
 	disable_touch = False
 	expand_state = 1
 	If ignore_event = False Then
