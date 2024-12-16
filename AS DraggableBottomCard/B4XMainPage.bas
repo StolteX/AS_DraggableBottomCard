@@ -34,7 +34,8 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	#End If
 	
 	asdbc_main.Initialize(Me,"asdbc_main")
-	asdbc_main.Create(Root,Root.Height/2,Root.Height - 60dip,50dip,Root.Width - 20dip,asdbc_main.Orientation_MIDDLE)
+	'asdbc_main.Create(Root,Root.Height/2,Root.Height - 60dip,50dip,Root.Width - 20dip,asdbc_main.Orientation_MIDDLE)
+	asdbc_main.Create(Root,Root.Height/2,Root.Height - 60dip,50dip,Root.Width,asdbc_main.Orientation_MIDDLE)
 	
 	asdbc_main.HeaderPanel.LoadLayout("frm_header")
 
@@ -55,7 +56,7 @@ Private Sub xlbl_hide_MouseClicked (EventData As MouseEvent)
 End Sub
 #Else
 Private Sub xlbl_show_Click
-	asdbc_main.Show(False)
+	asdbc_main.ExpandHalf
 End Sub
 
 Private Sub xlbl_hide_Click

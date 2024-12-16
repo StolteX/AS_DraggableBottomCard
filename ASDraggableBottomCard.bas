@@ -54,6 +54,11 @@ V1.13
 	-Add get and set BodyPanel
 V1.14
 	-B4J BugFix
+V1.15
+	-B4I Improvements - the entire screen is now used for the background shadow
+		-When the navigation bar was hidden, there was an area at the top that did not go dark when the menu was opened
+		-The height of the area is now determined and the gap closed
+		-B4XPages is now required in B4I
 #End If
 
 #Event: Opened
@@ -68,6 +73,7 @@ Sub Class_Globals
 	'Private mBase As B4XView 'ignore
 	Private xui As XUI 'ignore
 	Private mDarkPanel As B4XView
+	Private xpnl_Parent As B4XView
 	
 	Private downy As Float
 	Private old_top As Float
@@ -82,6 +88,7 @@ Sub Class_Globals
 	Private mDarkPanelClickable As Boolean = True
 	Private mUserCanClose As Boolean = True
 	'Private g_BodyDraggable As Boolean = False
+	Private m_TopBarOffset As Float = 0
 	
 	Private m_BodyDrag As Boolean = False
 	Private expand_state As Int = 0
@@ -120,7 +127,7 @@ Public Sub Create (Parent As B4XView,first_height As Float,second_height As Floa
 	g_width = width
 	g_orientation = orientation
 	g_header_height = header_height
-	
+	xpnl_Parent = Parent
 	ini_views(Parent)
 
 	#if B4A
@@ -204,6 +211,12 @@ Private Sub ShowIntern(ignore_event As Boolean,fromtouch As Boolean)
 	If xui.SubExists(mCallBack,mEventName & "_Open",0) Then
 		CallSub(mCallBack,mEventName & "_Open")
 	End If
+	
+	#If B4I
+	m_TopBarOffset = B4XPages.GetNativeParent(B4XPages.GetManager.GetTopPage.B4XPage).RootPanel.Top
+	#End If
+	
+	mDarkPanel.SetLayoutAnimated(0,0,-m_TopBarOffset,xpnl_Parent.Width,xpnl_Parent.Height + m_TopBarOffset)
 	mDarkPanel.Enabled = True
 	If mDarkPanel.Visible = False Then
 		mDarkPanel.SetVisibleAnimated(g_show_duration,True)
