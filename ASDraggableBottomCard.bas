@@ -224,7 +224,7 @@ Private Sub ShowIntern(ignore_event As Boolean,fromtouch As Boolean)
 	disable_touch = True
 	If expand_state = 1 Then
 		xpnl_CardBase.Height = g_second_height + g_header_height
-		xpnl_CardBase.SetLayoutAnimated(g_show_duration,xpnl_CardBase.Left,mDarkPanel.Height - g_first_height - g_header_height,g_width,g_second_height + g_header_height)
+		xpnl_CardBase.SetLayoutAnimated(g_show_duration,xpnl_CardBase.Left,mDarkPanel.Height - g_first_height - g_header_height - m_TopBarOffset,g_width,g_second_height + g_header_height)
 		xpnl_CardBody.Height = g_second_height
 		Sleep(g_show_duration)
 		xpnl_CardBase.Height = g_first_height + g_header_height
@@ -232,7 +232,7 @@ Private Sub ShowIntern(ignore_event As Boolean,fromtouch As Boolean)
 		VisibleBodyHeightChanged
 	Else
 		xpnl_CardBase.Height = g_second_height + g_header_height
-		xpnl_CardBase.SetLayoutAnimated(g_show_duration,xpnl_CardBase.Left,mDarkPanel.Height - g_second_height - g_header_height,g_width,g_second_height + g_header_height)
+		xpnl_CardBase.SetLayoutAnimated(g_show_duration,xpnl_CardBase.Left,mDarkPanel.Height - g_second_height - g_header_height - m_TopBarOffset,g_width,g_second_height + g_header_height)
 		xpnl_CardBody.Height = g_second_height
 		VisibleBodyHeightChanged
 		If fromtouch = False Then Sleep(g_show_duration)
