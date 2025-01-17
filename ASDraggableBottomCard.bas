@@ -59,6 +59,8 @@ V1.15
 		-When the navigation bar was hidden, there was an area at the top that did not go dark when the menu was opened
 		-The height of the area is now determined and the gap closed
 		-B4XPages is now required in B4I
+V1.16
+	-BugFix
 #End If
 
 #Event: Opened
@@ -321,9 +323,9 @@ Private Sub HandleTouch(Action As Int,y As Float) As Boolean
 		End If
 			
 		If mUserCanClose = True Then
-			xpnl_CardBase.Top = Max(mDarkPanel.Height - g_second_height - g_header_height,xpnl_CardBase.Top + y - downy)
+			xpnl_CardBase.Top = Max(mDarkPanel.Height - g_second_height - g_header_height - m_TopBarOffset,xpnl_CardBase.Top + y - downy)
 		Else
-			xpnl_CardBase.Top = Min(mDarkPanel.Height - g_first_height - g_header_height,Max(mDarkPanel.Height - g_second_height - g_header_height ,xpnl_CardBase.Top + y - downy))
+			xpnl_CardBase.Top = Min(mDarkPanel.Height - g_first_height - g_header_height - m_TopBarOffset,Max(mDarkPanel.Height - g_second_height - g_header_height ,xpnl_CardBase.Top + y - downy))
 		End If
 
 		If xpnl_CardBase.Top < (mDarkPanel.Height - g_first_height) Then
