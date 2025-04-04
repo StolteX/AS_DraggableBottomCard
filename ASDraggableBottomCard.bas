@@ -61,6 +61,12 @@ V1.15
 		-B4XPages is now required in B4I
 V1.16
 	-BugFix
+V1.17 (nicht veröffentlicht)
+	-Change - The menu now has the DarkPanel as parent and no longer the root page
+		-You don't notice it in use
+		-This allows you to add custom views to the DarkPanel and these are then above the BodyPanel and do not have to work on the root form
+	-New get and set BottomOffset - A value to display the menu above the keyboard, for example, if you set the value to the keyboard height
+		-Default: 0
 #End If
 
 #Event: Opened
@@ -91,6 +97,7 @@ Sub Class_Globals
 	Private mUserCanClose As Boolean = True
 	'Private g_BodyDraggable As Boolean = False
 	Private m_TopBarOffset As Float = 0
+	Private m_BottomOffset As Float = 0
 	
 	Private m_BodyDrag As Boolean = False
 	Private expand_state As Int = 0
@@ -195,8 +202,13 @@ Private Sub ini_views(Parent As B4XView)
 	xpnl_CardHeader = xui.CreatePanel("xpnl_header")
 	xpnl_CardBody = xui.CreatePanel("")
 	mDarkPanel = xui.CreatePanel("mDarkPanel")
-	Parent.AddView(mDarkPanel,0,0,0,0)
-	Parent.AddView(xpnl_CardBase,0,0,0,0)
+	
+'	Parent.AddView(mDarkPanel,0,0,0,0) 'Old
+'	Parent.AddView(xpnl_CardBase,0,0,0,0)
+
+	Parent.AddView(mDarkPanel,0,0,Parent.Width,Parent.Height) 'New
+	mDarkPanel.AddView(xpnl_CardBase,0,0,0,0)
+
 	xpnl_CardBase.AddView(xpnl_CardHeader,0,0,0,0)
 	xpnl_CardBase.AddView(xpnl_CardBody,0,0,0,0)
 	'xpnl_CardBase.Color = xui.Color_Red
@@ -226,7 +238,7 @@ Private Sub ShowIntern(ignore_event As Boolean,fromtouch As Boolean)
 	disable_touch = True
 	If expand_state = 1 Then
 		xpnl_CardBase.Height = g_second_height + g_header_height
-		xpnl_CardBase.SetLayoutAnimated(g_show_duration,xpnl_CardBase.Left,mDarkPanel.Height - g_first_height - g_header_height - m_TopBarOffset,g_width,g_second_height + g_header_height)
+		xpnl_CardBase.SetLayoutAnimated(g_show_duration,xpnl_CardBase.Left,mDarkPanel.Height - g_first_height - g_header_height - m_BottomOffset,g_width,g_second_height + g_header_height)
 		xpnl_CardBody.Height = g_second_height
 		Sleep(g_show_duration)
 		xpnl_CardBase.Height = g_first_height + g_header_height
@@ -234,7 +246,7 @@ Private Sub ShowIntern(ignore_event As Boolean,fromtouch As Boolean)
 		VisibleBodyHeightChanged
 	Else
 		xpnl_CardBase.Height = g_second_height + g_header_height
-		xpnl_CardBase.SetLayoutAnimated(g_show_duration,xpnl_CardBase.Left,mDarkPanel.Height - g_second_height - g_header_height - m_TopBarOffset,g_width,g_second_height + g_header_height)
+		xpnl_CardBase.SetLayoutAnimated(g_show_duration,xpnl_CardBase.Left,mDarkPanel.Height - g_second_height - g_header_height  - m_BottomOffset,g_width,g_second_height + g_header_height)
 		xpnl_CardBody.Height = g_second_height
 		VisibleBodyHeightChanged
 		If fromtouch = False Then Sleep(g_show_duration)
@@ -486,6 +498,14 @@ End Sub
 
 Public Sub setBodyDrag(Enabled As Boolean)
 	m_BodyDrag = Enabled
+End Sub
+
+Public Sub getBottomOffset As Float
+	Return m_BottomOffset
+End Sub
+
+Public Sub setBottomOffset(BottomOffset As Float)
+	m_BottomOffset = BottomOffset
 End Sub
 
 Private Sub VisibleBodyHeightChanged

@@ -7,6 +7,6 @@ ModuleBreakpoints2=
 ModuleClosedNodes0=4
 ModuleClosedNodes1=
 ModuleClosedNodes2=1
-NavigationStack=ASDraggableBottomCard,ExpandHalf,387,0,Main,Application_Start,23,3,ASDraggableBottomCard,ExpandFull,387,0,ASDraggableBottomCard,Show,194,0,ASDraggableBottomCard,Create,118,1,B4XMainPage,xlbl_show_Click,51,1,B4XMainPage,B4XPage_Created,31,0,ASDraggableBottomCard,ini_views,191,0,ASDraggableBottomCard,Class_Globals,84,4,ASDraggableBottomCard,ShowIntern,230,6,ASDraggableBottomCard,setBodyDrag,479,0
+NavigationStack=ASDraggableBottomCard,Show,194,0,ASDraggableBottomCard,Create,118,1,B4XMainPage,xlbl_show_Click,51,1,B4XMainPage,B4XPage_Created,31,0,ASDraggableBottomCard,Class_Globals,84,4,ASDraggableBottomCard,setBodyDrag,479,0,ASDraggableBottomCard,getBodyDrag,479,0,ASDraggableBottomCard,getDarkPanelClickable,462,0,ASDraggableBottomCard,ini_views,199,0,ASDraggableBottomCard,ShowIntern,211,6
 SelectedBuild=0
 VisibleModules=2,1
