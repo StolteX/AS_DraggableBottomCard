@@ -62,11 +62,13 @@ V1.15
 V1.16
 	-BugFix
 V1.17 (nicht veröffentlicht)
+	-BugFixes and Improvements
 	-Change - The menu now has the DarkPanel as parent and no longer the root page
 		-You don't notice it in use
 		-This allows you to add custom views to the DarkPanel and these are then above the BodyPanel and do not have to work on the root form
 	-New get and set BottomOffset - A value to display the menu above the keyboard, for example, if you set the value to the keyboard height
 		-Default: 0
+	-Change The corner radius is now only applied to the top corners
 #End If
 
 #Event: Opened
@@ -167,7 +169,7 @@ Public Sub Base_Resize (Width As Double, Height As Double)
 	End If
   
 	mDarkPanel.SetLayoutAnimated(0,0,0,Width,Height)
-	xpnl_CardBase.SetLayoutAnimated(0,tmp_left,Height + g_first_height,g_width,g_first_height)
+	xpnl_CardBase.SetLayoutAnimated(0,tmp_left,Height + g_first_height,g_width,g_first_height + g_header_height)
 	
 	xpnl_CardHeader.SetLayoutAnimated(0,0,0,g_width,g_header_height)
 	
@@ -180,17 +182,17 @@ End Sub
 
 Private Sub SetCircleClip (pnl As B4XView,radius As Int)'ignore
 #if B4J
-Dim jo As JavaObject = pnl
-Dim shape As JavaObject
-Dim cx As Double = pnl.Width
-Dim cy As Double = pnl.Height
-shape.InitializeNewInstance("javafx.scene.shape.Rectangle", Array(cx, cy))
-If radius > 0 Then
-	Dim d As Double = radius
-	shape.RunMethod("setArcHeight", Array(d))
-	shape.RunMethod("setArcWidth", Array(d))
-End If
-jo.RunMethod("setClip", Array(shape))
+	Dim jo As JavaObject = pnl
+	Dim shape As JavaObject
+	Dim cx As Double = pnl.Width
+	Dim cy As Double = pnl.Height * 2
+	shape.InitializeNewInstance("javafx.scene.shape.Rectangle", Array(cx, cy))
+	If radius > 0 Then
+		Dim d As Double = radius
+		shape.RunMethod("setArcHeight", Array(d))
+		shape.RunMethod("setArcWidth", Array(d))
+	End If
+	jo.RunMethod("setClip", Array(shape))
 #else if B4A
 	Dim jo As JavaObject = pnl
 	jo.RunMethod("setClipToOutline", Array(True))
@@ -238,15 +240,15 @@ Private Sub ShowIntern(ignore_event As Boolean,fromtouch As Boolean)
 	disable_touch = True
 	If expand_state = 1 Then
 		xpnl_CardBase.Height = g_second_height + g_header_height
-		xpnl_CardBase.SetLayoutAnimated(g_show_duration,xpnl_CardBase.Left,mDarkPanel.Height - g_first_height - g_header_height - m_BottomOffset,g_width,g_second_height + g_header_height)
+		xpnl_CardBase.SetLayoutAnimated(g_show_duration,xpnl_CardBase.Left,mDarkPanel.Height - g_first_height - g_header_height - m_BottomOffset,g_width,g_second_height + g_header_height + m_BottomOffset)
 		xpnl_CardBody.Height = g_second_height
 		Sleep(g_show_duration)
-		xpnl_CardBase.Height = g_first_height + g_header_height
+		xpnl_CardBase.Height = g_first_height + g_header_height + m_BottomOffset
 		xpnl_CardBody.Height = g_first_height
 		VisibleBodyHeightChanged
 	Else
-		xpnl_CardBase.Height = g_second_height + g_header_height
-		xpnl_CardBase.SetLayoutAnimated(g_show_duration,xpnl_CardBase.Left,mDarkPanel.Height - g_second_height - g_header_height  - m_BottomOffset,g_width,g_second_height + g_header_height)
+		xpnl_CardBase.Height = g_second_height + g_header_height + m_BottomOffset
+		xpnl_CardBase.SetLayoutAnimated(g_show_duration,xpnl_CardBase.Left,mDarkPanel.Height - g_second_height - g_header_height  - m_BottomOffset,g_width,g_second_height + g_header_height + m_BottomOffset)
 		xpnl_CardBody.Height = g_second_height
 		VisibleBodyHeightChanged
 		If fromtouch = False Then Sleep(g_show_duration)
@@ -283,7 +285,7 @@ Public Sub Hide	(ignore_event As Boolean)
 	Else
 		Sleep(g_hide_duration)
 	End If
-	xpnl_CardBase.Height = g_first_height
+	xpnl_CardBase.Height = g_first_height + g_header_height
 	Sleep(0)
 	inClosingProcess = False
 End Sub
@@ -409,10 +411,11 @@ End Sub
 'sets the corner radius of the header
 Public Sub setCornerRadius_Header(radius As Float)
 	
-	xpnl_CardHeader.Height = g_header_height * 2
-	
-	xpnl_CardHeader.SetColorAndBorder(xpnl_CardHeader.Color,0,0,radius)
+	xpnl_CardHeader.Height = g_header_height
+	SetPanelCornerRadius(xpnl_CardBase,radius,True,True,False,False)
+	SetPanelCornerRadius(xpnl_CardHeader,radius,True,True,False,False)
 	SetCircleClip(xpnl_CardHeader,radius)
+
 End Sub
 'expand the view full - second height + header height
 Public Sub ExpandFull	
@@ -511,7 +514,6 @@ End Sub
 Private Sub VisibleBodyHeightChanged
 	If xui.SubExists(mCallBack,mEventName & "_VisibleBodyHeightChanged",1) Then
 		CallSub2(mCallBack,mEventName & "_VisibleBodyHeightChanged",xpnl_CardBody.Height)
-		'CallSub2(mCallBack,mEventName & "_VisibleBodyHeightChanged",mDarkPanel.Height - xpnl_CardBase.Top)
 	End If
 End Sub
 
@@ -528,6 +530,32 @@ If mDarkPanelClickable = False Then Return
 	Hide(False)
 End Sub
 #End If
+
+Private Sub SetPanelCornerRadius(View As B4XView, CornerRadius As Float,TopLeft As Boolean,TopRight As Boolean,BottomLeft As Boolean,BottomRight As Boolean)
+    #If B4I
+	'https://www.b4x.com/android/forum/threads/individually-change-corner-radius-of-a-view.127751/post-800352
+	View.SetColorAndBorder(View.Color,0,0,CornerRadius)
+	Dim CornerSum As Int = IIf(TopLeft,1,0) + IIf(TopRight,2,0) + IIf(BottomLeft,4,0) + IIf(BottomRight,8,0)
+	View.As(NativeObject).GetField ("layer").SetField ("maskedCorners", CornerSum)
+    #Else If B4A
+	'https://www.b4x.com/android/forum/threads/gradientdrawable-with-different-corner-radius.51475/post-322392
+    Dim cdw As ColorDrawable
+    cdw.Initialize(View.Color, 0)
+    View.As(View).Background = cdw
+    Dim jo As JavaObject = View.As(View).Background
+    If View.As(View).Background Is ColorDrawable Or View.As(View).Background Is GradientDrawable Then
+        jo.RunMethod("setCornerRadii", Array As Object(Array As Float(IIf(TopLeft,CornerRadius,0), IIf(TopLeft,CornerRadius,0), IIf(TopRight,CornerRadius,0), IIf(TopRight,CornerRadius,0), IIf(BottomRight,CornerRadius,0), IIf(BottomRight,CornerRadius,0), IIf(BottomLeft,CornerRadius,0), IIf(BottomLeft,CornerRadius,0))))
+    End If
+    #Else If B4J
+	'https://www.b4x.com/android/forum/threads/b4x-setpanelcornerradius-only-for-certain-corners.164567/post-1008965
+    Dim Corners As String = ""
+    Corners = Corners & IIf(TopLeft, CornerRadius, 0) & " "
+    Corners = Corners & IIf(TopRight, CornerRadius, 0) & " "
+    Corners = Corners & IIf(BottomLeft, CornerRadius, 0) & " "
+    Corners = Corners & IIf(BottomRight, CornerRadius, 0)
+    CSSUtils.SetStyleProperty(View, "-fx-background-radius", Corners)
+    #End If
+End Sub
 
 #IF B4I
 

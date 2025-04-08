@@ -42,7 +42,7 @@ Private Sub B4XPage_Created (Root1 As B4XView)
 	asdbc_main.BodyPanel.LoadLayout("frm_body")
 	
 	
-	asdbc_main.CornerRadius_Header = asdbc_main.HeaderPanel.Height/2
+	asdbc_main.CornerRadius_Header = 20dip
 
 End Sub
 

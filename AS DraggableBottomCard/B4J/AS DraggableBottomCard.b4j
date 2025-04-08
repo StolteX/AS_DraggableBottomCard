@@ -10,12 +10,13 @@ Group=Default Group
 Library1=b4xpages
 Library2=jcore
 Library3=jfx
+Library4=cssutils
 Module1=|relative|..\..\ASDraggableBottomCard
 Module2=|relative|..\B4XMainPage
 NumberOfFiles=3
-NumberOfLibraries=3
+NumberOfLibraries=4
 NumberOfModules=2
-Version=9.8
+Version=10
 @EndOfDesignText@
 #Region Project Attributes 
 	#MainFormWidth: 600
