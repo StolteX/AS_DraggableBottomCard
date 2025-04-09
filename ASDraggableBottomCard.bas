@@ -61,7 +61,7 @@ V1.15
 		-B4XPages is now required in B4I
 V1.16
 	-BugFix
-V1.17 (nicht veröffentlicht)
+V1.17
 	-BugFixes and Improvements
 	-Change - The menu now has the DarkPanel as parent and no longer the root page
 		-You don't notice it in use
