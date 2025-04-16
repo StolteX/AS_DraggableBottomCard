@@ -69,6 +69,9 @@ V1.17
 	-New get and set BottomOffset - A value to display the menu above the keyboard, for example, if you set the value to the keyboard height
 		-Default: 0
 	-Change The corner radius is now only applied to the top corners
+V1.18 (nicht veröffentlicht)
+	-New ShowCustom - You have to extend the menu manually
+		-The Open Event is triggered and the DarkPanel becomes visible
 #End If
 
 #Event: Opened
@@ -220,6 +223,30 @@ End Sub
 
 Public Sub Show(ignore_event As Boolean)
 	ShowIntern(ignore_event,False)
+End Sub
+
+'The Open Event is triggered and the DarkPanel becomes visible
+'You have to extend the menu manually
+'<code>
+'	BottomCard.ShowCustom
+'	BottomCard.CardBase.SetLayoutAnimated(250,0,BottomCard.DarkPanel.Height - 400dip,BottomCard.DarkPanel.Width,400dip)
+'</code>
+Public Sub ShowCustom
+	
+	If xui.SubExists(mCallBack,mEventName & "_Open",0) Then
+		CallSub(mCallBack,mEventName & "_Open")
+	End If
+	
+	#If B4I
+	m_TopBarOffset = B4XPages.GetNativeParent(B4XPages.GetManager.GetTopPage.B4XPage).RootPanel.Top
+	#End If
+	
+	mDarkPanel.SetLayoutAnimated(0,0,-m_TopBarOffset,xpnl_Parent.Width,xpnl_Parent.Height + m_TopBarOffset)
+	mDarkPanel.Enabled = True
+	If mDarkPanel.Visible = False Then
+		mDarkPanel.SetVisibleAnimated(g_show_duration,True)
+	End If
+	
 End Sub
 
 Private Sub ShowIntern(ignore_event As Boolean,fromtouch As Boolean)
