@@ -69,7 +69,7 @@ V1.17
 	-New get and set BottomOffset - A value to display the menu above the keyboard, for example, if you set the value to the keyboard height
 		-Default: 0
 	-Change The corner radius is now only applied to the top corners
-V1.18 (nicht veröffentlicht)
+V1.18
 	-New ShowCustom - You have to extend the menu manually
 		-The Open Event is triggered and the DarkPanel becomes visible
 #End If
